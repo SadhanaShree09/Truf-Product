@@ -1,16 +1,18 @@
 import './App.css'
-import DashboardPage from './components/DashboardPage.jsx'
-import AuthPanel from './components/AuthPanel.jsx'
-import { useState } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import DashboardPage from './components/dashboard/DashboardPage.jsx'
+import LoginPage from './components/login/LoginPage.jsx'
+import LogoutPage from './components/login/LogoutPage.jsx'
 
 function App() {
-  const [authMode, setAuthMode] = useState('login')
-
   return (
-    <main className="app-layout">
-      <DashboardPage onAuthRequest={setAuthMode} />
-      <AuthPanel mode={authMode} onModeChange={setAuthMode} />
-    </main>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   )
 }
 

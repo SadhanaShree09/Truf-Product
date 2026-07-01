@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { loginUser, registerUser } from '../services/authApi.js'
+import { loginUser, registerUser } from '../../services/authApi.js'
 
-function AuthPanel({ mode = 'login', onModeChange }) {
+function AuthPanel({ mode = 'login', onModeChange, onLoginSuccess }) {
   const [activeMode, setActiveMode] = useState(mode)
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [status, setStatus] = useState('')
@@ -38,6 +38,7 @@ function AuthPanel({ mode = 'login', onModeChange }) {
 
       const response = await loginUser(payload)
       setStatus(`Welcome back, ${response.user?.name || 'player'}.`)
+      onLoginSuccess?.(response.user)
     } catch (error) {
       setStatus(error.message)
     } finally {

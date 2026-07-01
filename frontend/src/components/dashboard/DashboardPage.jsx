@@ -1,10 +1,28 @@
 import { useState } from 'react'
-import Icon from './Icon.jsx'
+import { Navigate, useLocation, Link } from 'react-router-dom'
+import Icon from '../shared/Icon.jsx'
 import TurfCard from './TurfCard.jsx'
-import { sidebarItems, turfs } from '../data/dashboard.js'
+import { sidebarItems, turfs } from '../../data/dashboard.js'
 
-function DashboardPage({ onAuthRequest }) {
+const AUTH_STORAGE_KEY = 'turf-play-auth-user'
+
+function readStoredUser() {
+  try {
+    const rawUser = sessionStorage.getItem(AUTH_STORAGE_KEY)
+    return rawUser ? JSON.parse(rawUser) : null
+  } catch {
+    return null
+  }
+}
+
+function DashboardPage() {
   const [activeItem, setActiveItem] = useState('Home')
+  const location = useLocation()
+  const user = location.state?.user || readStoredUser()
+
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
 
   return (
     <main className="dashboard-shell">
@@ -14,7 +32,7 @@ function DashboardPage({ onAuthRequest }) {
             <span>⚽</span>
           </div>
           <div>
-            <strong>TRUF PLAY</strong>
+            <strong>TURF PLAY</strong>
           </div>
         </div>
 
@@ -45,16 +63,16 @@ function DashboardPage({ onAuthRequest }) {
 
       <section className="content-area">
         <header className="topbar">
-          <div className="spacer" aria-hidden="true" />
+          <div className="topbar__user">
+            <span className="topbar__eyebrow">Signed in</span>
+            <strong>{user.name}</strong>
+            <span>{user.email}</span>
+          </div>
           <div className="auth-actions">
-            <button type="button" className="ghost-button" onClick={() => onAuthRequest('login')}>
+            <Link to="/logout" className="ghost-button" state={{ user }}>
               <Icon name="login" />
-              <span>Login</span>
-            </button>
-            <button type="button" className="primary-button" onClick={() => onAuthRequest('register')}>
-              <Icon name="register" />
-              <span>Register</span>
-            </button>
+              <span>Logout</span>
+            </Link>
           </div>
         </header>
 

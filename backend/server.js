@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb'
 
 const PORT = Number(process.env.PORT || 4000)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/'
-const DATABASE_NAME = process.env.MONGODB_DB || 'truf_play_auth'
+const DATABASE_NAME = process.env.MONGODB_DB || 'turf_play_auth'
 const USERS_COLLECTION = 'users'
 
 let mongoClient

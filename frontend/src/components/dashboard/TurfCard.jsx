@@ -1,4 +1,4 @@
-import Icon from './Icon.jsx'
+import Icon from '../shared/Icon.jsx'
 
 function TurfCard({ turf }) {
   return (
