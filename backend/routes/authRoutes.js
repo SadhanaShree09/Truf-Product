@@ -4,13 +4,15 @@ export async function authRoutes(req,res){
 
     if(req.url==="/api/auth/register" && req.method==="POST"){
 
-        return authController.register(req,res);
+        await authController.register(req,res);
+        return true;
 
     }
 
     if(req.url==="/api/auth/login" && req.method==="POST"){
 
-        return authController.login(req,res);
+        await authController.login(req,res);
+        return true;
 
     }
 
