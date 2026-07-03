@@ -3,7 +3,7 @@ import { loginUser, registerUser } from '../../services/authApi.js'
 
 function AuthPanel({ mode = 'login', onModeChange, onLoginSuccess }) {
   const [activeMode, setActiveMode] = useState(mode)
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [form, setForm] = useState({ name: '', username: '', email: '', identifier: '', password: '' })
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -22,21 +22,24 @@ function AuthPanel({ mode = 'login', onModeChange, onLoginSuccess }) {
     setStatus('')
 
     try {
-      const payload = {
-        email: form.email,
-        password: form.password,
-      }
-
       if (activeMode === 'register') {
-        const response = await registerUser({ ...payload, name: form.name })
+        const response = await registerUser({
+          name: form.name,
+          username: form.username,
+          email: form.email,
+          password: form.password,
+        })
         setStatus(response.message || 'Account created successfully.')
-        setForm((current) => ({ ...current, password: '' }))
+        setForm((current) => ({ ...current, password: '', identifier: form.username || form.email }))
         setActiveMode('login')
         onModeChange?.('login')
         return
       }
 
-      const response = await loginUser(payload)
+      const response = await loginUser({
+        identifier: form.identifier,
+        password: form.password,
+      })
       setStatus(`Welcome back, ${response.user?.name || 'player'}.`)
       onLoginSuccess?.(response.user)
     } catch (error) {
@@ -83,32 +86,62 @@ function AuthPanel({ mode = 'login', onModeChange, onLoginSuccess }) {
 
       <form className="auth-form" onSubmit={handleSubmit}>
         {activeMode === 'register' && (
+          <>
+            <label className="field">
+              <span>Name</span>
+              <input
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={updateField}
+                placeholder="Your name"
+                autoComplete="name"
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span>Username</span>
+              <input
+                name="username"
+                type="text"
+                value={form.username}
+                onChange={updateField}
+                placeholder="Choose a username"
+                autoComplete="username"
+                required
+              />
+            </label>
+          </>
+        )}
+
+        {activeMode === 'login' ? (
           <label className="field">
-            <span>Name</span>
+            <span>Username or Email</span>
             <input
-              name="name"
+              name="identifier"
               type="text"
-              value={form.name}
+              value={form.identifier}
               onChange={updateField}
-              placeholder="Your name"
-              autoComplete="name"
+              placeholder="username or you@example.com"
+              autoComplete="username"
+              required
+            />
+          </label>
+        ) : (
+          <label className="field">
+            <span>Email</span>
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={updateField}
+              placeholder="you@example.com"
+              autoComplete="email"
               required
             />
           </label>
         )}
-
-        <label className="field">
-          <span>Email</span>
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={updateField}
-            placeholder="you@example.com"
-            autoComplete="email"
-            required
-          />
-        </label>
 
         <label className="field">
           <span>Password</span>

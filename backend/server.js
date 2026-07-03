@@ -20,13 +20,44 @@ const server=http.createServer(async(req,res)=>{
 
     }
 
-    const handled=await routes(req,res);
+    try {
 
-    if(!handled){
+        const handled=await routes(req,res);
 
-        sendJson(res,404,{
-            message:"Route Not Found"
-        });
+        if(!handled){
+
+            sendJson(res,404,{
+                message:"Route Not Found"
+            });
+
+        }
+
+    } catch (error) {
+
+        const knownErrors = {
+            EMAIL_EXISTS: 409,
+            USERNAME_EXISTS: 409,
+            INVALID: 401,
+            INVALID_INPUT: 400,
+            NOT_FOUND: 404
+        };
+
+        const status = knownErrors[error?.message] || 500;
+        const message = error?.message === "INVALID"
+            ? "Invalid username/email or password"
+            : error?.message === "INVALID_INPUT"
+                ? "Missing required fields"
+                : error?.message === "EMAIL_EXISTS"
+                    ? "Email already exists"
+                    : error?.message === "USERNAME_EXISTS"
+                        ? "Username already exists"
+                        : error?.message === "NOT_FOUND"
+                            ? "Resource not found"
+                        : "Internal Server Error";
+
+        if (!res.headersSent) {
+            sendJson(res, status, { message });
+        }
 
     }
 

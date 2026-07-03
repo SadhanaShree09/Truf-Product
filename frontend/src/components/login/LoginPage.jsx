@@ -8,10 +8,19 @@ function LoginPage() {
 
   function handleLoginSuccess(user) {
     sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
-    navigate('/dashboard', {
-      replace: true,
-      state: { user },
-    })
+    
+    // Redirect based on user role
+    if (user.role === 'admin') {
+      navigate('/dashboard/admin', {
+        replace: true,
+        state: { user },
+      })
+    } else {
+      navigate('/dashboard', {
+        replace: true,
+        state: { user },
+      })
+    }
   }
 
   return (

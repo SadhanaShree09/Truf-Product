@@ -62,6 +62,30 @@ function Icon({ name }) {
           <path d="M6.5 19.5a3 3 0 0 0 3 3" />
         </svg>
       )
+    case 'building':
+      return (
+        <svg {...shared}>
+          <path d="M4 20h16" />
+          <path d="M6 20V6h12v14" />
+          <path d="M9 10h2M13 10h2M9 14h2M13 14h2" />
+        </svg>
+      )
+    case 'users':
+      return (
+        <svg {...shared}>
+          <circle cx="9" cy="9" r="3" />
+          <circle cx="16" cy="10" r="2.5" />
+          <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+          <path d="M13 19a4 4 0 0 1 7 0" />
+        </svg>
+      )
+    case 'settings':
+      return (
+        <svg {...shared}>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2h5l.3-2a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6c.1-.3.1-.7.1-1Z" />
+        </svg>
+      )
     case 'pin':
       return (
         <svg {...shared}>

@@ -8,6 +8,7 @@ export async function register(req,res){
 
     const user=await authService.register(
         body.name,
+        body.username,
         body.email,
         body.password
     );
@@ -26,7 +27,7 @@ export async function login(req,res){
     const body=await parseJsonBody(req);
 
     const user=await authService.login(
-        body.email,
+        body.identifier || body.email || body.username,
         body.password
     );
 
